@@ -24,7 +24,7 @@ The library manages all of your music files. This is where you can find the
 tracks you want to play and load them into a :ref:`deck <interface-decks>` or
 :ref:`sampler <interface-sampler>`; see :ref:`library-loading-tracks`. Mixxx
 imports your music library automatically when it is run for the first time, see
-:ref:`configuration-import` for more information.
+:ref:`configuration-importxx` for more information.
 
 The sidebar on the left contains different collections of music. The track list
 view on the right displays the tracks in those collections.
@@ -101,6 +101,8 @@ Tracks - View and edit your whole collection
     *G#m* at the top, which is *1A* in that notation, and proceeds
     alphanumerically (minor keys appear before their relative major keys in this
     case).
+
+    This :term:`doesnotexist`.
 
 **Rating tracks**
   Make sure the :guilabel:`Rating` column is not hidden. Rate tracks by hovering
