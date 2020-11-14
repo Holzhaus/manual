@@ -1,18 +1,30 @@
-name: linkcheck
+name: Sphinx
 
 on:
   pull_request:
-  push:
 
 jobs:
-  linkcheck:
+  build:
+    strategy:
+      matrix:
+        SPHINX_BUILDER: [dummy, linkcheck]
     runs-on: ubuntu-latest
     steps:
+    - name: Clone repository
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - name: Install dependencies
+    - name: Set up Graphviz
+      run: sudo apt update && sudo apt install -y graphviz
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
-    - name: Check for broken links
-      run: sphinx-build -q --color -b linkcheck source build/linkcheck
+    - name: Load problem matcher
+      uses: ammaraskar/sphinx-problem-matcher@master
+    - name: Build manual
+      run: sphinx-build -q --color -b "${SPHINX_BUILDER}"  source build
+      env:
+        SPHINX_BUILDER: ${{ matrix.SPHINX_BUILDER }}

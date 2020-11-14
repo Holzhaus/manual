@@ -1,0 +1,21 @@
+name: Sphinx
+
+on:
+  - pull_request
+
+jobs:
+  sphinx-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Graphviz
+      run: sudo apt update && sudo apt install -y graphviz
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+    - name: Install Python dependencies
+      run: pip install --upgrade -r requirements.txt
+    - uses: ammaraskar/sphinx-problem-matcher@master
+    - name: Build the Manual
+      run: sphinx-build -b dummy source build
