@@ -1,4 +1,4 @@
-name: Build HTML Manual
+name: Build Manual
 
 on:
   push:
@@ -32,3 +32,39 @@ jobs:
       env:
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+  build-pdf:
+    name: PDF
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        ref: main
+        fetch-depth: 0
+    - name: Install build dependencies
+      run: >
+        sudo apt-get update && sudo apt-get install -y
+        fonts-freefont-otf
+        graphviz
+        latexmk
+        librsvg2-bin
+        texlive
+        texlive-generic-recommended
+        texlive-lang-all
+        texlive-latex-extra
+        texlive-xetex
+        xindy
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+    - name: Install Python dependencies
+      run: pip install --upgrade -r requirements.txt
+    - name: Build versioned PDF manual
+      run: sh build_pdf.sh
+    - name: Deploy PDFs to downloads.mixxx.org
+      if: env.DOWNLOADS_HOSTGATOR_DOT_MIXXX_DOT_ORG_KEY_PASSWORD != null
+      run: bash travis-deploy.sh
+      env:
+        DOWNLOADS_HOSTGATOR_DOT_MIXXX_DOT_ORG_KEY_PASSWORD: ${{ secrets.DOWNLOADS_HOSTGATOR_DOT_MIXXX_DOT_ORG_KEY_PASSWORD }}

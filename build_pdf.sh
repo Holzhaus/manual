@@ -7,12 +7,15 @@ LANGUAGES="$(python -c 'import conf; print(" ".join(sorted((lang for lang in con
 cd .. || exit 1
 NUM_LANGUAGES="$(printf '%s' "$LANGUAGES" | wc -w)"
 
-i=1
+printf 'Building %d languages: %s\n' "$NUM_LANGUAGES" "$LANGUAGES"
 
 mkdir -p build/pdf
+
+i=1
 for lang in $LANGUAGES
 do
-    printf -- '----- Building language "%s"... [%d/%d] -----\n' "$lang" "$i" "$NUM_LANGUAGES"
+    printf -- '::group::Language %s [%d/%d]\n' "$lang" "$i" "$NUM_LANGUAGES"
+
     SPHINXOPTS="-q -j $(nproc) -Dlanguage=${lang}"
     LATEXMKOPTS="-f -interaction=nonstopmode -pdf"
     BUILDDIR="build/latex/${lang}"
@@ -33,4 +36,6 @@ do
     make -C "${BUILDDIR}" LATEXMKOPTS="${LATEXMKOPTS}" all-pdf >/dev/null
     [ -e "${BUILDDIR}/Mixxx-Manual.pdf" ] && cp "${BUILDDIR}/Mixxx-Manual.pdf" "build/pdf/mixxx-manual-${VERSION}-${lang}.pdf"
     i=$((i + 1))
+
+    printf -- '::endgroup::'
 done
