@@ -1,4 +1,4 @@
-name: Build Manual
+name: Build HTML Manual
 
 on:
   push:
