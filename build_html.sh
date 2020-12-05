@@ -13,10 +13,12 @@ mkdir -p build/html
 printf '/           /latest/               302\n' > build/html/_redirects
 printf '/latest/*   /2.2/:splat            301\n' >> build/html/_redirects
 
+printf 'Building %d languages: %s\n' "$NUM_LANGUAGES" "$LANGUAGES"
+
 i=1
 for lang in $LANGUAGES
 do
-    printf -- '----- Building language "%s"... [%d/%d] -----\n' "$lang" "$i" "$NUM_LANGUAGES"
+    printf -- '::group::Language %s [%d/%d]\n' "$lang" "$i" "$NUM_LANGUAGES"
 
     if [ "$lang" = "en" ]
     then
@@ -28,4 +30,6 @@ do
     fi
     make versionedhtml SPHINXOPTS="-j $(nproc) -Dlanguage=$lang"
     i=$((i + 1))
+
+    printf -- '::endgroup::'
 done
