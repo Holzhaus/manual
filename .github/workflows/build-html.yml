@@ -24,6 +24,7 @@ jobs:
     - name: Build versioned HTML manual
       run: sh build_html.sh
     - name: Publish
+      if: env.NETLIFY_SITE_ID != null && env.NETLIFY_AUTH_TOKEN != null
       uses: netlify/actions/cli@master
       timeout-minutes: 15
       with:
